@@ -60,7 +60,7 @@ variable     ncells         equal         2000                  # num cells
 variable     fracbonds      equal         0.1                   # fraction f
 variable     num_MC         equal         v_fracbonds*v_ncells*3.0  
 
-variable     kp             equal         0.1                                       # Equal style variable
+variable     kp             equal         0.1                                       
 variable     p0             equal         "4.2 * (step <= 5000) + 5.1 * (step > 5000)"                        # Shape factor/Normalized target perimeter
 variable     KT             equal         "0.0 * (step <= 5000) + 0.5 * (step > 5000)"                        # Junction fluctuations for T1 transitions
 variable     neveryMC       equal         10     
