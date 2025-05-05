@@ -55,10 +55,10 @@ for k = 100:1001
     A = zeros(n, n);
     for i = 1:size(neighborMatrix, 1)
         neighbors = neighborMatrix(i, :);
-        neighbors = neighbors(~isnan(neighbors));  % remove NaNs
+        neighbors = neighbors(~isnan(neighbors));  
         for j = 1:length(neighbors)
             A(i, neighbors(j)) = 1;
-            A(neighbors(j), i) = 1;  % if undirected graph
+            A(neighbors(j), i) = 1; 
         end
     end
     
