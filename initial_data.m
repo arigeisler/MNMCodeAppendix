@@ -21,7 +21,7 @@ l = L/sqrt(A0);          % Normalized box dimension
 x = l * rand(natoms, 1); % X-coordinates
 y = l * rand(natoms, 1); % Y-coordinates
 
-xcoord = x - l/2;
+xcoord = x - l/2;        % center box
 ycoord = y - l/2;
 zcoord = zeros(natoms,1); 
 
@@ -31,9 +31,9 @@ ylo = -l/2;
 yhi = l/2;
 
 r = [xcoord(:) ycoord(:)];           % update r
-dt = delaunayTriangulation(r);
+dt = delaunayTriangulation(r);       % use Delaunay initial triangulation
 DT = delaunay(r);
-[v,c] = voronoiDiagram(dt);
+[v,c] = voronoiDiagram(dt);          % voronoi for visualization
 
 % Find the number of bonds in the system 
 
