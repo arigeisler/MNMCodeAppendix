@@ -10,7 +10,7 @@ initial_data.m : Generates random distribution of points with Delaunay triangula
 
 #### MNM custom LAMMPS code: to be run with a full LAMMPS build, see LAMMPS documentation https://docs.lammps.org/
 
-MNM_input_file.in : input file (contains parameters for soft repulsion and viscosity regulation)
+MNM_input_file.in : input file (sets model parameters)
 
 core_MNM_model_header.h : header file
 
