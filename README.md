@@ -8,7 +8,7 @@ A morphodynamic network model for cell monolayers: Appendix B: Code Repository
 
 initial_data.m : Generates random distribution of points with Delaunay triangulation for an initial condition.
 
-#### MNM custom LAMMPS model code: to be run with a full LAMMPS build, see LAMMPS documentation https://docs.lammps.org/
+#### MNM custom LAMMPS code: to be run with a full LAMMPS build, see LAMMPS documentation https://docs.lammps.org/
 
 MNM_input_file.in : input file (contains parameters for soft repulsion and viscosity regulation)
 
