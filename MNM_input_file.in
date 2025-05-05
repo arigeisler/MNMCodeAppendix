@@ -1,0 +1,88 @@
+###cd /mnt/c/Users/Bandil/"OneDrive - UCB-O365"/LAMMPS/DniABM
+
+################
+### GENERAL INFO
+################
+
+units		lj
+dimension	2
+boundary	p p p
+
+# Specify atoms and bond attributes
+atom_style      atomic
+atom_modify 	map yes
+
+####################
+### SETUP PROBLEM
+####################
+
+# Initialize particles
+
+read_data               coords_init.dat
+
+# for inter-processor/ghost atom communication
+
+#pair_style      none
+
+variable        gc equal (xhi-xlo)/2.5            # ghost cut off (periodic boundaries)
+comm_modify	cutoff ${gc} vel yes              # sets the cut off for ghost atom communication
+
+# Specify the time step
+
+timestep       0.001
+
+#############################################
+# Compute voronoi 
+#############################################
+
+# Compute voronoi tesselation
+
+compute          voro all voronoi/atom neighbors yes  
+
+################################
+# Define simulation parameters
+################################
+
+variable    neveryout       equal        50
+
+# cell motion
+
+variable     nu0           equal          1.0                   # viscosity coefficient for brownian (rotational viscosity taken to be the same)
+variable     fa             equal         0.0                   # active force magnitude
+variable     c1             equal         0.15                  # viscosity regularization params
+variable     c2             equal         4.0
+variable     rcut           equal         0.36                  # soft repulsion params
+variable     ksoft          equal         100.0
+
+# cell rearrangemnt
+
+variable     ncells         equal         2000                  # num cells
+variable     fracbonds      equal         0.1                   # fraction f
+variable     num_MC         equal         v_fracbonds*v_ncells*3.0  
+
+variable     kp             equal         0.1                                       # Equal style variable
+variable     p0             equal         "4.2 * (step <= 5000) + 5.1 * (step > 5000)"                        # Shape factor/Normalized target perimeter
+variable     KT             equal         "0.0 * (step <= 5000) + 0.5 * (step > 5000)"                        # Junction fluctuations for T1 transitions
+variable     neveryMC       equal         10     
+variable     Js             equal         "0.0 * (step <= 5000) + 0.0 * (step > 5000)"                        # substrate alignment strength 
+variable     Jn             equal         "0.0 * (step <= 5000) + 0.2 * (step > 5000)"                        # neighbor alignment strength
+
+
+# Fix Berendsen params for relaxation
+
+variable    berflagx        equal         1                             # "0 * (step < 20000) + 0 * (step >= 20000)"
+variable    berflagy        equal         1
+variable    berdamp         equal         15                            # damping coefficient for fix berendsen
+
+fix 1 all morphodynamic voro ${rcut} ${ksoft} ${c1} ${c2} ${num_MC} v_neveryout v_nu0 v_berdamp v_berflagx v_berflagy v_kp v_p0 v_KT v_neveryMC v_Js v_Jn v_fa 
+fix 2 all brownian 0.1 12908410 gamma_t 1.0 rng none 
+
+dump			cell_data all custom ${neveryout} cell_data.dump id x y fx fy f_1[*]       
+ 
+thermo_style    	custom step ke pe fmax  
+# thermo_style          custom step ke c_3_press[1] c_3_press[2] 
+thermo_modify           flush yes                 
+thermo			${neveryout}
+ 
+run  50000          # run time
+            
